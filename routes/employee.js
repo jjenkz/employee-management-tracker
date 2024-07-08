@@ -1,4 +1,4 @@
-const { client } = require("../config/connection.js");
+const { client } = require("./config/connection.js");
 
 const viewEmployees = () => {
   return client.query(`

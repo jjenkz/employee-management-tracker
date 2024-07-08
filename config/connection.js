@@ -4,7 +4,7 @@ const { Client } = require("pg");
 
 require("dotenv").config();
 
-const client = New Client({
+const client = New Client ({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
@@ -12,8 +12,8 @@ const client = New Client({
     port: process.env.DB_PORT
 });
 
-const schemaSql = path.join(__dirname, "../db/schema.sql");
-const seedsSql = path.join(__dirname, "../db/seeds.sql");
+const schemaSql = path.join(__dirname, "./db/schema.sql");
+const seedsSql = path.join(__dirname, "./db/seeds.sql");
 
 const initDatabase = async () => {
     try {

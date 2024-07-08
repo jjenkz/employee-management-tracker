@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const { addEmployee, updateEmployee } = require("../routes/employee.js");
+const { addEmployee, updateEmployee } = require("./routes/employee.js");
 
 const addEmployeeP = () => {
   return inquirer

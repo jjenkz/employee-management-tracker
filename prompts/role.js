@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const { addRole } = require("../routes/role.js");
+const { addRole } = require("./routes/role.js");
 
 const addRoleP = () => {
   return inquirer

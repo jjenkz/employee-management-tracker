@@ -1,4 +1,4 @@
-const { client } = require("../config/connection.js");
+const { client } = require("./config/connection.js");
 
 const viewRoles = () => {
   return client.query(`
