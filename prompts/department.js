@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const { addDepartment } = require("./routes/department.js");
+const { addDepartment } = require("../routes/department.js");
 
 const addDeptP = () => {
   return inquirer
