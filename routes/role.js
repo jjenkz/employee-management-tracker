@@ -1,18 +1,11 @@
-const { client } = require("../config/connection.js");
+const Role = require("../models/Role");
 
-const viewRoles = () => {
-  return client.query(`
-    SELECT role.id, role.title, role.salary, department.name AS department 
-    FROM role 
-    JOIN department ON role.department_id = department.id
- `);
+const createRole = async (title, salary, department_id) => {
+  return await Role.create({ title, salary, department_id });
 };
 
-const addRole = (title, salary, department_id) => {
-  return client.query(
-    "INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)",
-    [title, salary, department_id]
-  );
+const getRoles = async () => {
+  return await Role.findAll();
 };
 
-module.exports = { viewRoles, addRole };
+module.exports = { createRole, getRoles };
