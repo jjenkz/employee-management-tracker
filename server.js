@@ -39,31 +39,31 @@ const displayMenu = async () => {
       name: "action",
       message: "What would you like to do?",
       choices: [
-        "View all departments",
-        "Add a department",
-        "View all roles",
-        "Add a role",
-        "View all employees",
-        "Add an employee",
+        "View All Departments",
+        "Add a Department",
+        "View All Roles",
+        "Add a Role",
+        "View All Employees",
+        "Add an Employee",
         "Exit",
       ],
     },
   ]);
 
   switch (answers.action) {
-    case "View all departments":
+    case "View All Departments":
       const departments = await Department.findAll();
       console.table(departments.map((department) => department.toJSON()));
       break;
-    case "Add a department":
+    case "Add a Department":
       const department = await departmentPrompt();
       await Department.create({ name: department.name });
       break;
-    case "View all roles":
+    case "View All Roles":
       const roles = await Role.findAll();
       console.table(roles.map((role) => role.toJSON()));
       break;
-    case "Add a role":
+    case "Add a Role":
       const role = await rolePrompt();
       await Role.create({
         title: role.title,
@@ -71,7 +71,7 @@ const displayMenu = async () => {
         department_id: role.department_id,
       });
       break;
-    case "View all employees":
+    case "View All Employees":
       const employees = await Employee.findAll({
         include: { model: Role, as: "role" },
       });
@@ -83,7 +83,7 @@ const displayMenu = async () => {
         })
       );
       break;
-    case "Add an employee":
+    case "Add an Employee":
       const employee = await employeePrompt();
       await Employee.create({
         first_name: employee.first_name,
