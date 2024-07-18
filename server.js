@@ -1,93 +1,104 @@
 const inquirer = require("inquirer");
 const logo = require("asciiart-logo");
-const { client, initDatabase } = require("./config/connection.js");
-const { viewDepartments } = require("./routes/department.js");
-const { viewRoles } = require("./routes/role.js");
-const { viewEmployees } = require("./routes/employee.js");
-const { addDeptP } = require("./prompts/department.js");
-const { addRoleP } = require("./prompts/role.js");
-const { addEmployeeP, updateEmployeeRole } = require("./prompts/employee.js");
+const express = require("express");
+const sequelize = require("./config/connection.js");
+const departmentPrompt = require("./prompts/departmentPrompt");
+const employeePrompt = require("./prompts/employeePrompt");
+const rolePrompt = require("./prompts/rolePrompt");
+const Department = require("./models/Department");
+const Role = require("./models/Role");
+const Employee = require("./models/Employee");
 
-initDatabase().then(() => {
-  logo("Employee Tracker", (err, data) => {
-    if (err) {
-      console.log("Error obtaining");
-      console.dir(err);
-      return;
-    }
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-    const frontPage = () => {
-      console.clear();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+sequelize
+  .sync({ force: true })
+  .then(() => {
+    logo("Employee Tracker", (err, data) => {
+      if (err) {
+        console.log("Something went wrong...");
+        console.dir(err);
+        return;
+      }
       console.log(data);
-      inquirer
-        .prompt([
-          {
-            type: "list",
-            name: "action",
-            message: "Choose an option:",
-            choices: [
-              "View All Employees",
-              "View All Roles",
-              "View All Departments",
-              "Add An Employee",
-              "Add A Role",
-              "Add A Department",
-              "Update Employee Role",
-              "Exit",
-            ],
-          },
-        ])
-        .then((answer) => {
-          switch (answer.action) {
-            case "View All Employees":
-              viewEmployees()
-                .then((res) => {
-                  console.table(res.rows);
-                  frontPage();
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-              break;
-            case "View All Roles":
-              viewRoles()
-                .then((res) => {
-                  console.table(res.rows);
-                  frontPage();
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-              break;
-            case "View All Departments":
-              viewDepartments()
-                .then((res) => {
-                  console.table(res.rows);
-                  frontPage();
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-              break;
-            case "Add an employee":
-              addEmployeeP().then(() => mainMenu());
-              break;
-            case "Add a role":
-              addRoleP().then(() => mainMenu());
-              break;
-            case "Add a department":
-              addDeptP().then(() => mainMenu());
-              break;
-            case "Update an employee role":
-              updateEmployeeRole().then(() => mainMenu());
-              break;
-            case "Exit":
-              client.end();
-              process.exit();
-              break;
-          }
-        });
-    };
-    frontPage();
+      displayMenu();
+    });
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });
+
+const displayMenu = async () => {
+  const answers = await inquirer.prompt([
+    {
+      type: "list",
+      name: "action",
+      message: "What would you like to do?",
+      choices: [
+        "View all departments",
+        "Add a department",
+        "View all roles",
+        "Add a role",
+        "View all employees",
+        "Add an employee",
+        "Exit",
+      ],
+    },
+  ]);
+
+  switch (answers.action) {
+    case "View all departments":
+      const departments = await Department.findAll();
+      console.table(departments.map((department) => department.toJSON()));
+      break;
+    case "Add a department":
+      const department = await departmentPrompt();
+      await Department.create({ name: department.name });
+      break;
+    case "View all roles":
+      const roles = await Role.findAll();
+      console.table(roles.map((role) => role.toJSON()));
+      break;
+    case "Add a role":
+      const role = await rolePrompt();
+      await Role.create({
+        title: role.title,
+        salary: role.salary,
+        department_id: role.department_id,
+      });
+      break;
+    case "View all employees":
+      const employees = await Employee.findAll({
+        include: { model: Role, as: "role" },
+      });
+      console.table(
+        employees.map((employee) => {
+          const employeeJson = employee.toJSON();
+          employeeJson.role = employee.role ? employee.role.title : "N/A";
+          return employeeJson;
+        })
+      );
+      break;
+    case "Add an employee":
+      const employee = await employeePrompt();
+      await Employee.create({
+        first_name: employee.first_name,
+        last_name: employee.last_name,
+        role_id: employee.role_id,
+        manager_id: employee.manager_id,
+      });
+      break;
+    case "Exit":
+      process.exit();
+  }
+
+  displayMenu();
+};
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
