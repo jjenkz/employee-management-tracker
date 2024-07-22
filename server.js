@@ -20,7 +20,7 @@ sequelize
   .then(() => {
     logo("Employee Tracker", (err, data) => {
       if (err) {
-        console.log("Something went wrong...");
+        console.log("Something went wrong");
         console.dir(err);
         return;
       }
