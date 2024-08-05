@@ -1,14 +1,15 @@
-const inquirer = require("inquirer");
+const pool = require("../config/connection");
 
-const departmentPrompt = async () => {
-  const answers = await inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "Enter the department name:",
-    },
-  ]);
-  return answers;
-};
+function findDepartment() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await pool.query("SELECT name FROM department");
+      resolve(result.rows);
+    } catch (error) {
+      console.error("Error executing query", error);
+      reject(error);
+    }
+  });
+}
 
-module.exports = departmentPrompt;
+module.exports = findDepartment;
