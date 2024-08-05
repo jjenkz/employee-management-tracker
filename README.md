@@ -1,6 +1,6 @@
 # Employee-Management-Tracker
 
-##Description
+## Description
 
 This product is a command-line app that allows a company to manage their database based off of their departments, employees and roles.
 
@@ -21,8 +21,6 @@ Some feature in this application include:
 
 Some common packages include:
 
-- sequelize
-- express
 - asci art logo
 - inquirer
 - pg
@@ -30,7 +28,7 @@ Some common packages include:
 
 ## Usage
 
-To start the application, make sure to be on the root page and type in "npm start". Then this will provide options such as:
+To start the application, make sure to be on the root page and type in "node index.js". Then this will provide options such as:
 
 - View All Departments
 - Add a Department
@@ -41,3 +39,5 @@ To start the application, make sure to be on the root page and type in "npm star
 - Exit
 
 ## Video Demo
+
+(Video Link)[https://drive.google.com/file/d/1sAc2_0uaB9wz3ZhgVm0vbTnPU5d5wvCI/view]

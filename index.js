@@ -27,26 +27,26 @@ function init() {
     },
   ]).then((answers) => {
     switch (answers.option) {
-      case "View All Departments":
+      case "View all departments":
         allDepartments();
         break;
-      case "View All Roles":
+      case "View all roles":
         allRoles();
         break;
-      case "View All Employees":
+      case "View all employees":
         allEmployees();
         break;
-      case "Add a Department":
+      case "Add a department":
         addDepartment();
         break;
-      case "Add a Role":
-        console.log("Add a Role");
+      case "Add a role":
+        console.log("Add a role");
         addRole();
         break;
-      case "Add an Employee":
+      case "Add an employee":
         addEmployee();
         break;
-      case "Update an Employee Role":
+      case "Update an employee role":
         updateEmpRole();
         break;
       case "Exit":
