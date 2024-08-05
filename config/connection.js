@@ -1,14 +1,14 @@
 const { Pool } = require("pg");
-require("dotenv").config();
+// require("dotenv").config();
 
 const pool = new Pool(
   {
     user: "postgres",
-    password: "root",
+    password: "B@seball30",
     host: "localhost",
-    database: "business_db",
+    database: "employees_db",
   },
-  console.log("Connected to the business_db database.")
+  console.log("Connected to the employees_db database.")
 );
 
 pool.connect();

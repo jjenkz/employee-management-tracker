@@ -27,26 +27,26 @@ function init() {
     },
   ]).then((answers) => {
     switch (answers.option) {
-      case "View all departments":
+      case "View All Departments":
         allDepartments();
         break;
-      case "View all roles":
+      case "View All Roles":
         allRoles();
         break;
-      case "View all employees":
+      case "View All Employees":
         allEmployees();
         break;
-      case "Add a department":
+      case "Add a Department":
         addDepartment();
         break;
-      case "Add a role":
-        console.log("Add a role");
+      case "Add a Role":
+        console.log("Add a Role");
         addRole();
         break;
-      case "Add an employee":
+      case "Add an Employee":
         addEmployee();
         break;
-      case "Update an employee role":
+      case "Update an Employee Role":
         updateEmpRole();
         break;
       case "Exit":
@@ -59,8 +59,6 @@ function init() {
 }
 
 function allDepartments() {
-  //console.log("In ALl Functions INIT: ", init);
-
   pool
     .query("SELECT * FROM department")
     .then((result) => {
@@ -144,7 +142,7 @@ function addEmployee() {
     let firstName = response.first_name;
     let lastName = response.last_name;
 
-    findRoles().then((roles) => {
+    getRole().then((roles) => {
       const roleChoices = roles.map(({ id, title }) => ({
         name: title,
         value: id,
@@ -160,11 +158,11 @@ function addEmployee() {
 
         console.log(roleId);
 
-        findEmployee().then((options) => {
+        getEmployee().then((options) => {
           const managerChoices = options.map(
             ({ id, first_name, last_name }) => ({
               name: `${first_name} ${last_name}`,
-              value: id, // Use employee.id as the value
+              value: id,
             })
           );
 
@@ -180,7 +178,6 @@ function addEmployee() {
 
             console.log(managerId);
 
-            // Ensure managerId is correctly assigned to the id from managerChoices
             if (managerId !== null) {
               managerId = managerChoices.find(
                 (choice) => choice.value === managerId
@@ -236,7 +233,7 @@ function addRole() {
     let roleName = response.role_name;
     let roleSalary = response.role_salary;
 
-    findDepartment().then((departments) => {
+    getDepartment().then((departments) => {
       const deptChoices = departments.map(({ name }) => ({
         name: name,
         name: name,
@@ -251,7 +248,6 @@ function addRole() {
         let dept = response.department;
         console.log(dept);
 
-        // Insert the new role into the database
         pool.query(
           `INSERT INTO role (title, salary, department_id) VALUES ($1, $2, (SELECT id FROM department WHERE name = $3))`,
           [roleName, roleSalary, dept],
@@ -271,7 +267,7 @@ function addRole() {
 }
 
 function updateEmpRole() {
-  findEmployee().then((options) => {
+  getEmployee().then((options) => {
     const employeeOptions = options.map(({ id, first_name, last_name }) => ({
       name: `${first_name} ${last_name}`,
       value: id, // Use employee.id as the value
@@ -285,7 +281,7 @@ function updateEmpRole() {
       let employeeId = response.employeeChoice;
       console.log(employeeId);
 
-      findRoles().then((roles) => {
+      getRole().then((roles) => {
         const roleOptions = roles.map(({ id, title }) => ({
           name: title,
           value: id,
